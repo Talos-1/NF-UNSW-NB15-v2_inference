@@ -1,20 +1,24 @@
 # NF-UNSW-NB15-v2_inference
 
-A project running LightGBM on the NF-UNSW-NB-15-v2 dataset with batch inference.
+A project running binary network intrusion detection on the NF-UNSW-NB-15-v2 dataset, using LightGBM, served on a FastAPI endpoint with batch inference.
 
-To run the project:
+The [NF-UNSW-NB15-v2](https://rdm.uq.edu.au/files/8c6e2a00-ef9c-11ed-827d-e762de186848) dataset contains 2,390,275 flows and 43 NetFlow features, covering 9 attack categories. The dataset should be downloaded and placed in `data/NF-UNSW-NB15-v2.csv`.
+
+Hyperparameter optimisation was performed using `optuna`, with 40 variations tested. It turned out that similar results were achieved using the base model so this was kept for simplicity.
+
+## Running the Project
 
 ```bash
 cd NF-UNSW-NB15-v2_inference
 poetry install
 eval $(poetry env activate)
-python train.py
-uvicorn server:app --port 8000 #starts server
-#start another terminal
-python client.py
+
+python train.py #train, evaluate on validation dataset, write model and save test split.
+uvicorn server:app --port 8000 #start the inference server
+python client.py # in a second terminal, score the test split.
 ```
 
-Hyperparameter optimisation was performed using `optuna`, with 40 variations tested. It turned out that similar results were achieved using the base model.
+## Results
 
 ```bash
 $ python train.py
